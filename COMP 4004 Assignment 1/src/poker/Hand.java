@@ -41,22 +41,15 @@ public class Hand {
 		}
 		
 		int score = 0;
-		int highestValue = 0; 
+		int highestKickerValue = 0; 
 		int pair1 = -1, pair2 = -1, threeKind = -1, fourKind = -1, straight = -1, flush = -1;
-		
-		for (int i = 12; i >= 0; --i) {
-			if (valueTally[i] > 0) {
-				highestValue = i;
-				break;
-			}
-		}
-		
+			
 		for (int i = 12; i >= 0; --i) {
 			if (valueTally[i] == 4) {
 				fourKind = i;
 				break;
 			}
-			if (valueTally[i] == 3) {
+			else if (valueTally[i] == 3) {
 				threeKind = i; 
 			}
 			else if (valueTally[i] == 2) {
@@ -65,11 +58,15 @@ public class Hand {
 				else
 					pair2 = i;
 			}
+			else if (valueTally[i] == 1) {
+				if (highestKickerValue < i)
+					highestKickerValue = i;
+			}
 		} 
 		
 		for (int i = 0; i < 9; ++i) {
 			if (valueTally[i] == 1 && valueTally[i+1] == 1 && valueTally[i+2] == 1 && valueTally[i+3] == 1 && valueTally[i+4] == 1) {
-				straight = highestValue; 
+				straight = i+4; 
 			}
 		}
 		
@@ -87,21 +84,21 @@ public class Hand {
 		if (flush >= 0 && straight >= 0)
 			score = 800000 + (straight * 1000);
 		else if (fourKind >= 0) 
-			score = 700000 + (fourKind * 1000) + highestValue;
+			score = 700000 + (fourKind * 1000) + highestKickerValue;
 		else if (threeKind >= 0 && pair1 >= 0)
 			score = 600000 + (threeKind * 1000) + (pair1 * 100);
 		else if (flush >= 0) 
-			score = 500000 + highestValue;
+			score = 500000 + highestKickerValue;
 		else if (straight >= 0)
 			score = 400000 + (straight * 1000);
 		else if (threeKind >= 0)
-			score = 300000 + (threeKind * 1000) + highestValue;
+			score = 300000 + (threeKind * 1000) + highestKickerValue;
 		else if (pair2 >= 0 && pair1 >= 0)
-			score = 200000 + (pair2 * 1000) + (pair1 * 100) + highestValue;
+			score = 200000 + (pair2 * 1000) + (pair1 * 100) + highestKickerValue;
 		else if (pair1 >= 0)
-			score = 100000 + (pair1 * 100) + highestValue;	
+			score = 100000 + (pair1 * 100) + highestKickerValue;	
 		else
-			score = highestValue;
+			score = highestKickerValue;
 		
 		return score;
 		

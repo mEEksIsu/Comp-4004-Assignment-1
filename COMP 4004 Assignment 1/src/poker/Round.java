@@ -8,6 +8,7 @@ public class Round {
 	
 	private ArrayList<Player> players = new ArrayList<Player>();
 	public ArrayList<String> playerHandStrings = new ArrayList<String>();
+	private ArrayList<String> cardsAlreadyUsed = new ArrayList<String>();
 	
 	private int numberOfPlayers;
 	
@@ -28,7 +29,7 @@ public class Round {
 	
 	public void requestPlayerHands() {
 		for (int i = 0; i < numberOfPlayers; ++i) {
-			System.out.print("Enter player ID followed by each card in player's hand (separated by spaces): ");
+			System.out.print("Enter player ID (starts at 1) followed by each card in player's hand (separated by spaces): ");
 			playerHandStrings.add(input.nextLine());
 		}
 	}
@@ -36,11 +37,25 @@ public class Round {
 	public void generatePlayerHands() {
 		for (String s: playerHandStrings) {
 			String[] splitString = s.split(" ");
+			
+			if (splitString.length != 6)
+				throw new IncorrectInputException();
+			
 			int playerID = Integer.parseInt(splitString[0]);
+			if (playerID < 1 || playerID > numberOfPlayers)
+				throw new IncorrectInputException();
+			
 			Hand newHand = new Hand(); 
+			
 			for (int i = 1; i < splitString.length; ++i) {
 				newHand.addCard(splitString[i]);
+				
+				if (cardsAlreadyUsed.contains(splitString[i]))
+					throw new IncorrectInputException();
+				else
+					cardsAlreadyUsed.add(splitString[i]);
 			}
+			
 			players.get(playerID-1).setHand(newHand);
 		}
 	}

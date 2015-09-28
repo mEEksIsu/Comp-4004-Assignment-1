@@ -6,9 +6,10 @@ import org.junit.Test;
 
 public class GameTest {
 
-	@Test
-	public void initializeCorrectNumberOfPlayers() {
+	@Test(expected = IncorrectInputException.class)
+	public void shouldThrowExceptionIfIncorrectNumberOfPlayers() {
 		Game game = new Game(); 
+		game.checkPlayerLimit(5);
 	}
 
 }
